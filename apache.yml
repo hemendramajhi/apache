@@ -1,0 +1,31 @@
+---
+- name: apache web server config playbook
+  hosts: node1
+  become: true
+  tasks: 
+    - name: installing apache web server
+      yum:
+        name: httpd
+        state: latest
+    - name: start the apache web server
+      service:
+         name: httpd
+         state: started
+         enabled: true
+    - name: setting up apache web server
+      copy:
+         content: "nehra classes are awosome"
+         dest: /var/www/html/index.html
+    - name: restart the apache server
+      service:
+         name: httpd
+         state: restarted
+    - name: allow httpd traffic on firewall
+      firewalld:
+            service: http
+            state: enabled
+            permanent: yes
+    - name: restart the firewall services
+      service:
+        name: firewalld
+        state: restarted 
